@@ -1,6 +1,10 @@
-#encoding=utf-8
+#-*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
+#city encode
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 base_url = 'https://www.aqistudy.cn/historydata/daydata.php?city='
 str_city = '北京'
@@ -24,7 +28,7 @@ def get_city_set():
     fp = open(str_file,'rb')
     city_set = list()
     for line in fp.readlines():
-        city_set.append(str(line.strip(),encoding='utf-8'))
+        city_set.append(str(line.strip()))
     return city_set
 
 month_set = get_month_set()
@@ -33,7 +37,7 @@ city_set = get_city_set()
 city_dic = dict()
 for city in city_set:
     file_name = city + '.csv'
-    fp = open('aqi/' + file_name, 'w')
+    fp = open('/home/tx-sh-02/Documents/Tianchi/aqistudy-master/air/' + file_name, 'w')
     for i in range(len(month_set)):
         str_month = month_set[i]
         weburl = ('%s%s&month=%s' % (base_url,city,str_month))
@@ -46,7 +50,6 @@ for city in city_set:
             tag_aqi = result[i + 1]
             record_day = tag_date.get_text().strip()
             record_aqi = tag_aqi.get_text().strip()
-            fp.write(('%s,%s\n' % (record_day,record_aqi)))
-
-        print('%d---%s,%s---DONE' % (city_set.index(city), city, str_month))
+            fp.write(('{0},{1},{2}\n'.format(record_day,record_aqi,city))) #在这边加了city以便后期合并文本
+        print('{0}---{1},{2}---DONE'.format(city_set.index(city), city, str_month))
     fp.close()
