@@ -37,7 +37,7 @@ city_set = get_city_set()
 city_dic = dict()
 for city in city_set:
     file_name = city + '.csv'
-    fp = open('/home/tx-sh-02/Documents/Tianchi/aqistudy-master/air/' + file_name, 'w')
+    fp = open('aqi/' + file_name, 'w')
     for i in range(len(month_set)):
         str_month = month_set[i]
         weburl = ('%s%s&month=%s' % (base_url,city,str_month))
